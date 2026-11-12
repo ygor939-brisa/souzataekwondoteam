@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://souza-taekwondo-team.pages.dev/sitemap.xml
