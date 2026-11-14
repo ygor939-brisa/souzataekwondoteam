@@ -262,7 +262,7 @@ const inicioDe = u => isStaff(u) ? '#/painel/alunos' : '#/aluno';
 /* ---------- 5. PEDAÇOS DE TELA ---------- */
 const logoHTML = (cls = '') => {
   const u = currentUser();
-  const destino = u ? inicioDe(u) : '#/login/aluno';
+  const destino = u ? inicioDe(u) : rota.includes('/instrutor') ? '#/login/instrutor' : '#/login/aluno';
   return `<a class="brand ${cls}" href="${destino}" data-action="inicio"><img src="${CONFIG.logo}" alt="${esc(CONFIG.nome)}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-mark',textContent:'S'}))"><span>${esc(CONFIG.nome)}</span></a>`;
 };
 const waLink = (txt = 'Olá! Gostaria de agendar uma aula experimental.') => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
