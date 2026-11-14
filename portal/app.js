@@ -251,7 +251,7 @@ const statusCob = c => c.pago_em ? 'pago' : c.vencimento < today() ? 'atrasado' 
 const STATUS_COB = { pago: 'Pago', atrasado: 'Atrasado', aberto: 'Em aberto' };
 
 /* ---------- 4. NAVEGAÇÃO ---------- */
-let rota = location.hash.startsWith('#/') ? location.hash : '#/login';
+let rota = location.hash.startsWith('#/') ? location.hash : '#/login/aluno';
 // replace=true para redirecionamentos (não cria entrada no "voltar" do navegador)
 const go = (h, replace) => {
   if (h !== rota) history[replace ? 'replaceState' : 'pushState'](null, '', h === '#/' ? location.pathname : h);
@@ -262,7 +262,7 @@ const inicioDe = u => isStaff(u) ? '#/painel/alunos' : '#/aluno';
 /* ---------- 5. PEDAÇOS DE TELA ---------- */
 const logoHTML = (cls = '') => {
   const u = currentUser();
-  const destino = u ? inicioDe(u) : '#/login';
+  const destino = u ? inicioDe(u) : '#/login/aluno';
   return `<a class="brand ${cls}" href="${destino}" data-action="inicio"><img src="${CONFIG.logo}" alt="${esc(CONFIG.nome)}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-mark',textContent:'S'}))"><span>${esc(CONFIG.nome)}</span></a>`;
 };
 const waLink = (txt = 'Olá! Gostaria de agendar uma aula experimental.') => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
@@ -455,15 +455,23 @@ function faixaAnimada() {
     </g></svg><p class="fx-legenda" id="fx-leg"></p></div>`;
 }
 const semMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function viewLogin() {
-  return `<div class="center-page"><form class="login-card" data-form="login" autocomplete="on">
+function viewLogin(tipo = 'aluno') {
+  const instrutor = tipo === 'instrutor';
+  const titulo = instrutor ? 'Área do instrutor' : 'Área do aluno';
+  const descricao = instrutor ? 'Acesse a gestão de turmas, alunos e evolução.' : 'Acompanhe sua faixa, frequência e próximas conquistas.';
+  const alternativa = instrutor ? ['Aluno', '#/login/aluno'] : ['Instrutor', '#/login/instrutor'];
+  return `<div class="center-page login-${instrutor ? 'instrutor' : 'aluno'}"><form class="login-card" data-form="login" autocomplete="on">
     ${logoHTML()}
     ${faixaAnimada()}
-    <h2 style="text-align:center;font-size:1.6rem">Login</h2>
+    <span class="login-role">${instrutor ? 'Gestão da academia' : 'Portal do praticante'}</span>
+    <h2 class="login-title">${titulo}</h2>
+    <p class="login-intro">${descricao}</p>
+    <input type="hidden" name="perfil" value="${instrutor ? 'instrutor' : 'aluno'}">
     <div class="field"><label for="lg">Usuário</label><input id="lg" name="login" required autocomplete="username" autocapitalize="none"></div>
     <div class="field"><label for="pw">Senha</label><input id="pw" name="senha" type="password" required autocomplete="current-password"></div>
     <p class="error" id="login-err"></p>
     <button class="btn btn-red" style="width:100%">Entrar</button>
+    <p class="login-switch">É ${alternativa[0].toLowerCase()}? <a href="${alternativa[1]}">Entrar na área do ${alternativa[0].toLowerCase()}</a></p>
     <p style="text-align:center;margin:16px 0 10px"><a href="../index.html" class="muted small">← Voltar à página principal</a></p>
     <p class="muted small" style="text-align:center;margin:0">Esqueceu a senha? <a href="${waLink('Olá! Esqueci minha senha do site. Meu usuário é: ')}" target="_blank" rel="noopener">Peça uma nova no WhatsApp</a>.</p>
   </form></div>`;
@@ -1097,7 +1105,7 @@ async function alternarPresenca(alunoId, marcar) {
 const actions = {
   inicio() {
     const u = currentUser();
-    go(u ? inicioDe(u) : '#/login');
+    go(u ? inicioDe(u) : '#/login/aluno');
   },
   async logout() {
     if (!demoAtivo) await sb.auth.signOut();
@@ -1407,13 +1415,13 @@ function render() {
   let html;
   if (!r) {
     const u = currentUser();
-    return go(u ? inicioDe(u) : '#/login', true);
+    return go(u ? inicioDe(u) : '#/login/aluno', true);
   }
   else if (carregando) html = viewCarregando();
   else {
     const u = currentUser();
-    if (r === 'login') { if (u) return go(inicioDe(u), true); html = viewLogin(); }
-    else if (!u) return go('#/login', true);
+    if (r === 'login') { if (u) return go(inicioDe(u), true); html = viewLogin(a); }
+    else if (!u) return go('#/login/aluno', true);
     else if (r === 'aluno') { if (isStaff(u)) return go('#/painel/alunos', true); html = viewAluno(u, a); }
     else if (r === 'evento') html = viewEvento(u, a);
     else if (r === 'senha') html = viewSenha(u);
@@ -1428,7 +1436,7 @@ function render() {
   if (rolar) window.scrollTo(0, 0);
 }
 window.addEventListener('popstate', () => { rota = location.hash.startsWith('#/') ? location.hash : '#/'; render(); });
-sb.auth.onAuthStateChange((evt) => { if (!demoAtivo && evt === 'SIGNED_OUT' && meuId) { meuId = null; go('#/login'); } });
+sb.auth.onAuthStateChange((evt) => { if (!demoAtivo && evt === 'SIGNED_OUT' && meuId) { meuId = null; go('#/login/aluno'); } });
 
 // Instalar como aplicativo (funciona sem internet só para abrir; os dados precisam de conexão)
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});

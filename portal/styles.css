@@ -104,6 +104,13 @@ section.light .muted{color:var(--muted)}
 .center-page{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 30% 20%,rgba(212,167,44,.25),transparent 50%),var(--bg)}
 .login-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px}
 .login-card .brand{justify-content:center;margin-bottom:18px}
+.login-role{display:block;margin:4px auto 8px;width:max-content;color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.login-title{text-align:center;font-size:1.75rem;margin:0}
+.login-intro{max-width:310px;margin:8px auto 22px;text-align:center;color:var(--muted);font-size:.9rem;line-height:1.55}
+.login-switch{text-align:center;margin:18px 0 0;color:var(--muted);font-size:.82rem}
+.login-switch a{color:var(--gold);font-weight:700;text-decoration:none}
+.login-instrutor{background:radial-gradient(circle at 70% 18%,rgba(212,167,44,.2),transparent 44%),radial-gradient(circle at 20% 80%,rgba(112,21,35,.2),transparent 45%),var(--bg)}
+.login-instrutor .login-card{border-color:rgba(212,167,44,.35)}
 .demo{margin-top:22px;padding:14px;border-radius:10px;background:var(--bg2);font-size:.85rem;color:var(--muted)}
 .demo code{color:var(--text)}
 
